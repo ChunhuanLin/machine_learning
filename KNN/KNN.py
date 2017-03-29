@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-   #在文件的开头加上这行就可以写中文啦！
+
 from numpy import *
 import operator
 
@@ -39,9 +41,19 @@ def file2matrix(filename):
     for line in arrayOLines:
         line = line.strip()   # 去掉换行符
         listFromLine = line.split('\t')  # 去掉分隔符，返回列表
-        returnMat[index:3] = listFromLine[0:3]   # 将一个列表的值赋值给了一个数组
+        returnMat[index, :] = listFromLine[0:3]   # 将一个列表的值赋值给了一个数组
         classLabelVector.append(listFromLine[-1])   # 列表扩展
         index += 1
     return returnMat, classLabelVector
 
+def autoNorm(dataSet):
+    minVals = dataSet.min(0)    # 对一个数组按列取最小值，0表示按列取最小
+    maxVals = dataSet.max(0)
+    ranges = maxVals - minVals
+    normDataSet = zeros(shape(dataSet))
+    m = dataSet.shape[0]
+    normDataSet = dataSet - tile(minVals, (m,1))
+    normDataSet = normDataSet / tile(maxVals-minVals, (m,1))
+
+    return normDataSet, ranges, minVals
 
